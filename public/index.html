@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saans: your smog-season air quality assistant</title>
+  <meta name="description" content="Get a daily plan for winter smog: what to change in your commute, exercise, kitchen and home, and how much each change cuts the pollution you breathe.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="masthead">
+    <p class="brand">Saans</p>
+    <h1>Breathe easier through smog season</h1>
+    <p class="lede">Tell us where you are and how your day works. You get a plan for today, and a clear estimate of how much each change reduces the polluted air you breathe.</p>
+  </header>
+
+  <main id="main">
+    <section class="step" aria-labelledby="h-where">
+      <h2 id="h-where">Step 1: Where are you?</h2>
+
+      <form id="location-form" role="search" novalidate>
+        <label for="place-q">City or area</label>
+        <div class="row">
+          <input id="place-q" name="q" type="search" autocomplete="off" maxlength="80" aria-describedby="place-hint" placeholder="For example: Delhi">
+          <button type="submit">Search</button>
+        </div>
+        <p id="place-hint" class="hint">We look up today’s air quality for that area.</p>
+      </form>
+
+      <p class="or">or</p>
+      <button type="button" id="use-location" class="secondary">Use my current location</button>
+
+      <ul id="place-results" class="place-list" aria-label="Matching places"></ul>
+
+      <details class="manual">
+        <summary>Enter a PM2.5 reading yourself</summary>
+        <p class="hint">Use this if you have an air quality monitor or the live data is unavailable.</p>
+        <div class="row">
+          <div class="grow">
+            <label for="manual-pm25">PM2.5 in µg/m³</label>
+            <input id="manual-pm25" type="number" inputmode="decimal" min="0" max="1000" step="0.1">
+          </div>
+          <button type="button" id="manual-apply" class="secondary">Use this reading</button>
+        </div>
+      </details>
+
+      <div id="air" class="air" hidden aria-live="polite"></div>
+    </section>
+
+    <form id="plan-form" novalidate>
+      <section class="step" aria-labelledby="h-you">
+        <h2 id="h-you">Step 2: Your household and day</h2>
+
+        <fieldset>
+          <legend>Who lives at home?</legend>
+          <p class="hint">Tick all that apply. We give stricter advice when someone is more sensitive to smog.</p>
+          <label class="check"><input type="checkbox" name="children"> Children under 12</label>
+          <label class="check"><input type="checkbox" name="elderly"> Adults over 65</label>
+          <label class="check"><input type="checkbox" name="pregnant"> Someone who is pregnant</label>
+          <label class="check"><input type="checkbox" name="respiratory"> Asthma, COPD or a heart condition</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Your day</legend>
+          <div class="field">
+            <label for="f-commute">How do you get to work or school?</label>
+            <select id="f-commute" name="commute">
+              <option value="wfh">I work or study from home</option>
+              <option value="walk">Walk</option>
+              <option value="cycle">Bicycle</option>
+              <option value="two_wheeler">Motorbike or scooter</option>
+              <option value="car">Car</option>
+              <option value="transit">Bus, metro or train</option>
+            </select>
+          </div>
+          <div class="field" id="minutes-field" hidden>
+            <label for="f-commuteMinutes">Total travel time per day, in minutes</label>
+            <input id="f-commuteMinutes" name="commuteMinutes" type="number" inputmode="numeric" min="0" max="240" step="1" value="40" aria-describedby="minutes-hint">
+            <p id="minutes-hint" class="hint">Add up both directions. Maximum 240.</p>
+          </div>
+          <div class="field">
+            <label for="f-exercise">Where do you usually exercise?</label>
+            <select id="f-exercise" name="exercise">
+              <option value="none">I don’t exercise regularly</option>
+              <option value="outdoor">Outdoors (walk, run, sport)</option>
+              <option value="indoor">Indoors (home or gym)</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Your home</legend>
+          <div class="field">
+            <label for="f-cooking">What do you cook on?</label>
+            <select id="f-cooking" name="cooking">
+              <option value="lpg">LPG or piped gas</option>
+              <option value="induction">Induction or electric</option>
+              <option value="biomass">Wood, coal or dung</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-heating">How do you keep warm?</label>
+            <select id="f-heating" name="heating">
+              <option value="none">Blankets and warm clothes</option>
+              <option value="electric">Electric heater</option>
+              <option value="biomass">Burning wood, charcoal or dung</option>
+            </select>
+          </div>
+          <label class="check"><input type="checkbox" name="hasPurifier"> We own an air purifier</label>
+        </fieldset>
+
+        <div class="field">
+          <label for="f-question">Anything specific you want to ask? (optional)</label>
+          <textarea id="f-question" name="question" rows="3" maxlength="300" aria-describedby="q-hint" placeholder="For example: Is it safe for my son to play cricket this evening?"></textarea>
+          <p id="q-hint" class="hint">Up to 300 characters. Don’t include personal details.</p>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" id="submit-btn">Get my plan</button>
+        <p id="form-error" class="error" role="alert"></p>
+      </div>
+    </form>
+
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+
+    <section id="results" class="results" tabindex="-1" aria-labelledby="results-h" hidden></section>
+  </main>
+
+  <footer>
+    <p>Saans gives general guidance, not medical advice. If you or a family member has trouble breathing, chest pain or dizziness, contact a doctor or emergency services.</p>
+    <p>Air quality data: <a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a> (CC BY 4.0), built on Copernicus Atmosphere Monitoring Service model data. Your answers are used to build your plan and are not stored on our servers.</p>
+  </footer>
+</body>
+</html>

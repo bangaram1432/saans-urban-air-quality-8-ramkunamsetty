@@ -1,0 +1,15 @@
+{
+  "name": "saans-urban-air-quality-assistant",
+  "version": "1.0.0",
+  "description": "GenAI-powered assistant that helps families cope with winter smog: location-aware routines, indoor air hacks and cleaner alternatives, with the impact of each choice explained.",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "node scripts/dev-server.js",
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "check": "node --check lib/*.js api/*.js public/js/*.js scripts/*.js"
+  },
+  "license": "MIT"
+}
